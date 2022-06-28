@@ -1,43 +1,42 @@
 import React from "react";
 import images from "../../../assets/images";
-import {
-  createImageType,
-  createVoteType,
-} from "../../../typedef/common/common.types";
+import { ImageType, VoteType } from "../../../typedef/common/common.types";
 import "./css/WritePopUp.css";
 
 type Props = {
   closePopUp: React.MouseEventHandler<HTMLButtonElement>;
-  votes: createVoteType[];
+  formInfo: any;
   addVote: React.MouseEventHandler<HTMLButtonElement>;
-  changeVoteInput: (id: number, e: React.ChangeEvent<HTMLInputElement>) => void;
-  removeVote: (id: number) => void;
-  imgs: Array<any>;
+  changeVoteInput: any;
+  removeVote: any;
   addImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  removeImg: (id: number) => void;
-  postBlock: React.FormEventHandler<HTMLFormElement>;
+  removeImg: (e: any) => void;
+  uploadBlock: React.FormEventHandler<HTMLFormElement>;
   onChangeCategory: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onChangeContent: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 };
 
 const WritePopUp = ({
   closePopUp,
-  votes,
+  formInfo,
   addVote,
   changeVoteInput,
   removeVote,
-  imgs,
   addImg,
   removeImg,
-  postBlock,
+  uploadBlock,
   onChangeCategory,
   onChangeContent,
 }: Props) => {
   return (
-    <form className="write-pop-up" onSubmit={postBlock}>
+    <form className="write-pop-up" onSubmit={uploadBlock}>
       <div className="pop-up-left">
         <div className="category-section">
-          <select className="category" onChange={(e) => onChangeCategory(e)}>
+          <select
+            className="category"
+            value={formInfo.category}
+            onChange={onChangeCategory}
+          >
             <option value="Love">연애</option>
             <option value="Travel">여행</option>
             <option value="Fashion">패션</option>
@@ -49,7 +48,8 @@ const WritePopUp = ({
         <textarea
           className="textarea"
           placeholder="내용을 입력하세요."
-          onChange={(e) => onChangeContent(e)}
+          value={formInfo.content}
+          onChange={onChangeContent}
           required
         ></textarea>
       </div>
@@ -62,27 +62,28 @@ const WritePopUp = ({
         <div className="info-area">
           <div className="title">투표 항목</div>
           <div className="vote-area">
-            {votes.map((vote, index) => (
-              <>
+            {formInfo.voteText.map((vote: VoteType, index: number) => (
+              <div key={index} id={"vote" + index}>
                 <input
                   className={
                     index > 1 ? "add-vote-input-box" : "vote-input-box"
                   }
-                  onChange={(e) => changeVoteInput(vote.id, e)}
+                  value={vote.content}
+                  onChange={changeVoteInput}
                   required
                 />
                 {index > 1 ? (
                   <button
                     className="vote-del-btn"
                     type="button"
-                    onClick={() => removeVote(vote.id)}
+                    onClick={removeVote}
                   >
                     삭제
                   </button>
                 ) : null}
-              </>
+              </div>
             ))}
-            {votes.length < 4 ? (
+            {formInfo.voteText.length < 4 ? (
               <button type="button" className="more-btn" onClick={addVote}>
                 +
               </button>
@@ -90,23 +91,23 @@ const WritePopUp = ({
           </div>
           <div className="title">이미지</div>
           <div className="image-area">
-            {imgs.map((img: createImageType) => (
-              <div className="img-preview" key={img.id}>
+            {formInfo.image ? (
+              <div className="img-preview" id={"image"}>
                 <img
                   className="img-add-btn"
-                  src={img.imgBase64 as string}
-                  alt={img.imgFile.name}
+                  src={formInfo.image.imgBase64 as string}
+                  alt="sampleImage"
                 />
                 <button
                   className="image-del-btn"
                   type="button"
-                  onClick={() => removeImg(img.id)}
+                  onClick={removeImg}
                 >
                   X
                 </button>
               </div>
-            ))}
-            {imgs.length < 1 ? (
+            ) : null}
+            {!formInfo.image ? (
               <>
                 <label htmlFor="temp-btn">
                   <div className="img-add-btn">+</div>

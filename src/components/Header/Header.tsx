@@ -7,6 +7,7 @@ type Props = {
   onProfileClick: React.MouseEventHandler<HTMLButtonElement>;
   onSearch: React.MouseEventHandler<HTMLButtonElement>;
   goSearch: (e: React.KeyboardEvent) => void;
+  searchInput: string;
   setSearchInput: React.Dispatch<React.SetStateAction<string>>;
   onUserInfo: React.MouseEventHandler<HTMLButtonElement>;
   onUserBoards: React.MouseEventHandler<HTMLButtonElement>;
@@ -18,6 +19,7 @@ const Header = ({
   onProfileClick,
   onSearch,
   goSearch,
+  searchInput,
   setSearchInput,
   onUserInfo,
   onUserBoards,
@@ -34,6 +36,7 @@ const Header = ({
           className="searchInput"
           type="text"
           placeholder="검색"
+          value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           onKeyPress={(e) => goSearch(e)}
         />

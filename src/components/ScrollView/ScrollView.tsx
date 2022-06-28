@@ -1,65 +1,55 @@
 import React from "react";
 import "./css/scrollView.css";
 import BlockContainer from "./containers/BlockContainer";
-import { getBlockType } from "../../typedef/common/common.types";
 import images from "../../assets/images";
+import InfiniteScroll from "../common/InfiniteScroll/InfiniteScroll";
+import { getBlockType } from "../../typedef/common/common.types";
 
 type Props = {
-  setTarget: React.LegacyRef<HTMLDivElement>;
-  loading: boolean;
+  next: string | null;
   itemList: getBlockType[];
-  setItemList: React.Dispatch<React.SetStateAction<getBlockType[]>>;
+  addItemList: () => Promise<void>;
   loadPopUp: React.MouseEventHandler<HTMLButtonElement>;
-  next: string;
-  scrollView: React.RefObject<HTMLDivElement>;
-  searchContent: string;
+  scrollLoading: boolean;
 };
 
 const ScrollView = ({
-  setTarget,
-  loading,
-  itemList,
-  setItemList,
-  loadPopUp,
   next,
-  scrollView,
-  searchContent,
+  itemList,
+  addItemList,
+  loadPopUp,
+  scrollLoading,
 }: Props) => {
   return (
     <section className="wrapper">
       <button className="write-btn" onClick={loadPopUp}>
         <img className="icon" src={images.pencil} alt="작성" />
       </button>
-      <div className="scroll-view-wrap" ref={scrollView}>
-        {itemList.map((block, index) =>
-          searchContent.length > 0 ? (
-            block.content.includes(searchContent) ? (
+      <div className="scroll-view-wrap">
+        {scrollLoading ? null : (
+          <InfiniteScroll
+            block={
               <BlockContainer
-                block={block}
-                key={index}
-                itemList={itemList}
-                setItemList={setItemList}
+                content={{
+                  id: 0,
+                  owner: "",
+                  category: "",
+                  image: null,
+                  createdAt: "",
+                  updatedAt: "",
+                  content: "",
+                  likeCount: 0,
+                  votedIndex: 0,
+                  voteText: "",
+                  voteTotal: 0,
+                  currentUser: "",
+                }}
               />
-            ) : null
-          ) : (
-            <BlockContainer
-              block={block}
-              key={index}
-              itemList={itemList}
-              setItemList={setItemList}
-            />
-          )
-        )}
-        {next && !loading && (
-          <div className="target" ref={setTarget}>
-            Loading...
-          </div>
-        )}
-        {!next && itemList.length > 0 && (
-          <div className="end">마지막 게시글입니다.</div>
-        )}
-        {!next && itemList.length == 0 && (
-          <div className="end">게시글이 없습니다.</div>
+            }
+            blockProps={itemList}
+            addItemList={addItemList}
+            end={!next}
+          />
         )}
       </div>
     </section>

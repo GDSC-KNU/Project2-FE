@@ -112,6 +112,15 @@
   display: flex;
 }
 
+.block-pop-up-wrap .pop-up-left .content-view .user-area .update-btn {
+  background-color: #5868ff;
+  font-size: 15px;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
 .block-pop-up-wrap .pop-up-left .content-view .user-area .delete-btn {
   background-color: #ff6262;
   font-size: 15px;

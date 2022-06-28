@@ -2,7 +2,7 @@
   -webkit-box-flex: 2;
       -ms-flex: 2;
           flex: 2;
-  height: calc(100vh - 90px);
+  height: calc(100vh - 74px);
   position: relative;
 }
 
@@ -19,7 +19,7 @@
   position: absolute;
   right: 40px;
   bottom: 40px;
-  background-color: orange;
+  background-color: #ff6811;
   width: 70px;
   height: 70px;
   border-radius: 100%;
@@ -29,7 +29,7 @@
 }
 
 .wrapper .write-btn:hover {
-  background-color: #e49401;
+  background-color: #db3e00;
 }
 
 .wrapper .write-btn .icon {
@@ -46,6 +46,6 @@
 
 .end {
   text-align: center;
-  height: 50px;
+  height: 100px;
 }
 /*# sourceMappingURL=scrollView.css.map */

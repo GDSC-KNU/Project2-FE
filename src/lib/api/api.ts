@@ -1,7 +1,8 @@
 import axios, { AxiosError } from "axios";
 
 //메인배너
-export const apiOrigin = "http://3.39.167.118:8000";
+// export const apiOrigin = "http://3.39.167.118:8000";
+export const apiOrigin = "http://localhost:8000";
 
 export const apiRoute = {
   board: "/boards",

@@ -158,6 +158,10 @@
   border-bottom-right-radius: 5px;
 }
 
+.write-pop-up .pop-up-right .info-area .vote-area .vote-del-btn:hover {
+  background-color: #c93939;
+}
+
 .write-pop-up .pop-up-right .info-area .vote-area .more-btn {
   width: calc(100% - 20px);
   height: 40px;

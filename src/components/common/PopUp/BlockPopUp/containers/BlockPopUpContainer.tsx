@@ -1,32 +1,28 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import BlockPopUp from "../components/BlockPopUp";
+import React, { useCallback, useState } from "react";
+import BlockPopUp from "../BlockPopUp";
 import {
   BasicAPIResponseType,
   getBlockType,
   LoginTokenType,
-} from "../../../typedef/common/common.types";
+} from "../../../../../typedef/common/common.types";
 import {
   apiOrigin,
   apiRoute,
   requestDelete,
   requestPost,
-} from "../../../lib/api/api";
-import useAuth from "../../../hooks/Auth/useAuth";
+} from "../../../../../lib/api/api";
+import useAuth from "../../../../../hooks/Auth/useAuth";
+import usePopUp from "../../../../../hooks/usePopUp";
+import WritePopUpContainer from "../../../../ScrollView/containers/WritePopUpContainer";
 
 type Props = {
   blockDetail: getBlockType;
   closePopUp: React.MouseEventHandler<HTMLButtonElement>;
-  itemList: getBlockType[];
-  setItemList: React.Dispatch<React.SetStateAction<getBlockType[]>>;
 };
 
-const BlockPopUpContainer = ({
-  blockDetail,
-  closePopUp,
-  itemList,
-  setItemList,
-}: Props) => {
+const BlockPopUpContainer = ({ blockDetail, closePopUp }: Props) => {
   const { token } = useAuth();
+  const { __showPopUpFromHooks } = usePopUp();
 
   const [picView, setPicView] = useState(false);
   const [image, setImage] = useState<string>("");
@@ -82,9 +78,11 @@ const BlockPopUpContainer = ({
     [comment]
   );
 
-  useEffect(() => {
-    console.log("blockpopupcontainer", itemList);
-  });
+  const loadWritePopUp = useCallback(() => {
+    __showPopUpFromHooks(
+      <WritePopUpContainer block={blockDetail} closePopUp={closePopUp} />
+    );
+  }, []);
 
   return (
     <BlockPopUp
@@ -101,8 +99,7 @@ const BlockPopUpContainer = ({
       deleteBlock={deleteBlock}
       post={post}
       setPost={setPost}
-      itemList={itemList}
-      setItemList={setItemList}
+      loadWritePopUp={loadWritePopUp}
     />
   );
 };

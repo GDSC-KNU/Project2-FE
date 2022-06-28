@@ -1,6 +1,6 @@
 import React from "react";
 import "./css/imagePopUp.css";
-import images from "../../../assets/images";
+import images from "../../../../assets/images";
 
 type Props = {
   focusImage: string;

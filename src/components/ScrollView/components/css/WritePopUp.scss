@@ -134,6 +134,10 @@
           border: 1px solid black;
           border-top-right-radius: 5px;
           border-bottom-right-radius: 5px;
+
+          &:hover {
+            background-color: rgb(201, 57, 57);
+          }
         }
 
         .more-btn {

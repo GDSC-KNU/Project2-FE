@@ -77,6 +77,18 @@ export type PopUpTypes = {
   isShown: boolean;
 };
 
+export type NextTypes = {
+  next: string | null;
+};
+
+export type ItemListTypes = {
+  itemList: getBlockType[];
+};
+
+export type SearchContentTypes = {
+  searchContent: string;
+};
+
 export type getBlockResponseType = {
   count: number;
   next: string;
@@ -88,13 +100,13 @@ export type getBlockType = {
   id: number;
   owner: string;
   category: string;
-  image: any;
+  image: string | null;
   createdAt: string;
   updatedAt: string;
   content: string;
   likeCount: number;
   votedIndex: number;
-  voteText: string;
+  voteText: string | VoteType[];
   voteTotal: number;
   currentUser: string;
 };
@@ -113,7 +125,7 @@ export type postBlockResponseType = {
   id: number;
   owner: string;
   category: "Love" | "Travel" | "Hot";
-  image: "string";
+  image: "string" | null;
   createdAt: string;
   updatedAt: string;
   content: "string";
@@ -138,14 +150,12 @@ export type getCommentType = {
   content: string;
 };
 
-export type createVoteType = {
-  id: number;
+export type VoteType = {
   content: string;
   count: number;
 };
 
-export type createImageType = {
-  id: number;
+export type ImageType = {
   imgBase64: string | ArrayBuffer | null;
-  imgFile: File;
+  imgFile: string | Blob | null;
 };

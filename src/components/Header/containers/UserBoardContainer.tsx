@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import useAuth from "../../../hooks/Auth/useAuth";
+import useBlock from "../../../hooks/useBlock";
 import usePopUp from "../../../hooks/usePopUp";
 import { apiOrigin, apiRoute, requestGet } from "../../../lib/api/api";
 import {
@@ -7,17 +8,13 @@ import {
   getBlockType,
   UserBoardType,
 } from "../../../typedef/common/common.types";
-import BlockPopUpContainer from "../../ScrollView/containers/BlockPopUpContainer";
+import BlockPopUpContainer from "../../common/PopUp/BlockPopUp/containers/BlockPopUpContainer";
 import UserBoard from "../components/UserBoard";
 
-type Props = {
-  itemList: getBlockType[];
-  setItemList: React.Dispatch<React.SetStateAction<getBlockType[]>>;
-};
-
-const UserBoardContainer = ({ itemList, setItemList }: Props) => {
+const UserBoardContainer = () => {
   const { token } = useAuth();
   const { __showPopUpFromHooks, __hidePopUpFromHooks } = usePopUp();
+  const { stringToVote } = useBlock();
   const [boards, setBoards] = useState<UserBoardType>({
     count: 0,
     next: null,
@@ -40,16 +37,6 @@ const UserBoardContainer = ({ itemList, setItemList }: Props) => {
     ],
   });
 
-  const stringToVote = (voteText: string) => {
-    voteText = voteText.replace(/\\/gi, "");
-    voteText = voteText.replace(/'/gi, '"');
-    const votes = JSON.parse(voteText).map((vote: Array<string | number>) => {
-      return { content: vote[0], count: vote[1] };
-    });
-
-    return votes;
-  };
-
   const onload = useCallback(async () => {
     const { data } = await requestGet<BasicAPIResponseType<UserBoardType>>(
       apiOrigin + apiRoute.mine,
@@ -68,7 +55,6 @@ const UserBoardContainer = ({ itemList, setItemList }: Props) => {
 
       setBoards({ ...data, results: newBoard });
     }
-    console.log(data);
   }, []);
 
   const getBlockDetail = useCallback(
@@ -76,19 +62,16 @@ const UserBoardContainer = ({ itemList, setItemList }: Props) => {
       const blockDetail = {
         ...blockData,
         updatedAt: blockData.updatedAt.split(".")[0].replace("T", " "),
-        image: [blockData.image],
-        voteText: stringToVote(blockData.voteText),
+        voteText: stringToVote(blockData.voteText as string),
       };
       __showPopUpFromHooks(
         <BlockPopUpContainer
           blockDetail={blockDetail}
           closePopUp={closePopUp}
-          itemList={itemList}
-          setItemList={setItemList}
         />
       );
     },
-    [__showPopUpFromHooks, itemList]
+    [__showPopUpFromHooks]
   );
 
   const closePopUp = useCallback(() => {

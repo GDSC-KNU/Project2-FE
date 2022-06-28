@@ -1,66 +1,21 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import useAuth from "../../../hooks/Auth/useAuth";
+import useBlock from "../../../hooks/useBlock";
 import usePopUp from "../../../hooks/usePopUp";
-import { apiOrigin, apiRoute, requestGet } from "../../../lib/api/api";
-import {
-  BasicAPIResponseType,
-  getBlockType,
-} from "../../../typedef/common/common.types";
-import BlockPopUpContainer from "../../ScrollView/containers/BlockPopUpContainer";
+import BlockPopUpContainer from "../../common/PopUp/BlockPopUp/containers/BlockPopUpContainer";
 import SideBoard from "../SideBoard";
 
-type Props = {
-  itemList: getBlockType[];
-  setItemList: React.Dispatch<React.SetStateAction<getBlockType[]>>;
-};
-
-const SideBoardContainer = ({ itemList, setItemList }: Props) => {
+const SideBoardContainer = () => {
   const { __showPopUpFromHooks, __hidePopUpFromHooks } = usePopUp();
-  const { token } = useAuth();
+  const { getBlockDetail } = useBlock();
 
-  const stringToVote = (voteText: string) => {
-    voteText = voteText.replace(/\\/gi, "");
-    voteText = voteText.replace(/'/gi, '"');
-    const votes = JSON.parse(voteText).map((vote: Array<string | number>) => {
-      return { content: vote[0], count: vote[1] };
-    });
+  const loadPopUp = useCallback(async (id: number) => {
+    const blockDetail = await getBlockDetail(id);
 
-    return votes;
-  };
-
-  const getBlockDetail = async (id: number) => {
-    const { data } = await requestGet<BasicAPIResponseType<getBlockType>>(
-      `${apiOrigin}${apiRoute.board}/${id}/`,
-      {
-        Authorization: `Bearer ${token}`,
-      }
+    __showPopUpFromHooks(
+      <BlockPopUpContainer blockDetail={blockDetail} closePopUp={closePopUp} />
     );
-
-    const blockDeatil = {
-      ...data,
-      updatedAt: data.updatedAt.split(".")[0].replace("T", " "),
-      image: [data.image],
-      voteText: stringToVote(data.voteText),
-    };
-
-    return blockDeatil;
-  };
-
-  const loadPopUp = useCallback(
-    async (id: number) => {
-      const blockDetail = await getBlockDetail(id);
-
-      __showPopUpFromHooks(
-        <BlockPopUpContainer
-          blockDetail={blockDetail}
-          closePopUp={closePopUp}
-          itemList={itemList}
-          setItemList={setItemList}
-        />
-      );
-    },
-    [itemList]
-  );
+  }, []);
 
   const closePopUp = useCallback(() => {
     __hidePopUpFromHooks();

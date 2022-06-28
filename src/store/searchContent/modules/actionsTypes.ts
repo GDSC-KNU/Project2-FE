@@ -1,0 +1,2 @@
+export const UPDATE_SEARCH_CONTENT = "UPDATE_SEARCH_CONTENT" as const;
+export const RESET_SEARCH_CONTENT = "RESET_SEARCH_CONTENT" as const;

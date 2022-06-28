@@ -62,13 +62,13 @@
 }
 
 .block .content-area {
-  width: 96%;
-  margin: 2px 12px;
+  width: 100%;
+  padding: 2px 12px;
 }
 
 .block .content-area .content-view {
   word-wrap: break-word;
-  word-break: keep-all;
+  word-break: break-all;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;

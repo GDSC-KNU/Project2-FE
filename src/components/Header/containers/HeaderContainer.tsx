@@ -1,33 +1,24 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../../hooks/Auth/useAuth";
 import usePopUp from "../../../hooks/usePopUp";
 import useRootRoute from "../../../hooks/useRootRoute";
-import { apiOrigin, apiRoute, requestDelete } from "../../../lib/api/api";
-import {
-  BasicAPIResponseType,
-  getBlockType,
-  RemoveUserType,
-} from "../../../typedef/common/common.types";
+import { RootState } from "../../../store/rootReducer";
+import { updateSearchContent } from "../../../store/searchContent/actions";
 import Header from "../Header";
 import UserBoardContainer from "./UserBoardContainer";
 import UserInfoContainer from "./UserInfoContainer";
 
-type Props = {
-  setSearchContent: React.Dispatch<React.SetStateAction<string>>;
-  itemList: getBlockType[];
-  setItemList: React.Dispatch<React.SetStateAction<getBlockType[]>>;
-};
-
-const HeaderContainer = ({
-  setSearchContent,
-  itemList,
-  setItemList,
-}: Props) => {
+const HeaderContainer = () => {
   const [isDropDown, setIsDropDown] = useState(false);
   const [searchInput, setSearchInput] = useState("");
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const searchString = useSelector(
+    (root: RootState) => root.searchContentReducer.searchContent
+  );
   const { __updateRootFromHooks } = useRootRoute();
   const { __showPopUpFromHooks } = usePopUp();
   const { clearAccess } = useAuth();
@@ -37,11 +28,11 @@ const HeaderContainer = ({
   }, [isDropDown]);
 
   const onSearch = useCallback(() => {
-    setSearchContent(searchInput);
+    dispatch(updateSearchContent(searchInput));
   }, [searchInput]);
 
   const goSearch = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") setSearchContent(searchInput);
+    if (e.key === "Enter") dispatch(updateSearchContent(searchInput));
   };
 
   const onUserInfo = useCallback(() => {
@@ -61,10 +52,12 @@ const HeaderContainer = ({
   }, [navigate, sessionStorage, clearAccess, __updateRootFromHooks]);
 
   const onUserBoards = useCallback(() => {
-    __showPopUpFromHooks(
-      <UserBoardContainer itemList={itemList} setItemList={setItemList} />
-    );
-  }, [__showPopUpFromHooks, itemList]);
+    __showPopUpFromHooks(<UserBoardContainer />);
+  }, [__showPopUpFromHooks]);
+
+  useEffect(() => {
+    setSearchInput(searchString);
+  }, [searchString]);
 
   return (
     <Header
@@ -72,6 +65,7 @@ const HeaderContainer = ({
       onProfileClick={onProfileClick}
       onSearch={onSearch}
       goSearch={goSearch}
+      searchInput={searchInput}
       setSearchInput={setSearchInput}
       onUserInfo={onUserInfo}
       onUserBoards={onUserBoards}

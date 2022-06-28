@@ -1,11 +1,10 @@
-import React from "react";
 import "./css/VoteView.css";
-import { createVoteType } from "../../../typedef/common/common.types";
+import { VoteType } from "../../../typedef/common/common.types";
 import ProgressBar from "./ProgressBar";
 
 type Props = {
   votedIndex: number;
-  voteList: Array<createVoteType>;
+  voteList: VoteType[];
   voteTotal: number;
   postVote: (index: number) => Promise<void>;
 };
